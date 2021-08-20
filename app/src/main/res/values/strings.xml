@@ -2,4 +2,5 @@
     <string name="app_name">TestAppache</string>
     <string name="create_project">Create project</string>
     <string name="image_saved_project">Image saved project</string>
+    <string name="projects">Projects</string>
 </resources>

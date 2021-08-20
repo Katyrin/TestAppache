@@ -6,7 +6,7 @@
     android:layout_margin="@dimen/margin_normal"
     android:clickable="true"
     android:focusable="true"
-    app:cardCornerRadius="@dimen/margin_min">
+    app:cardCornerRadius="@dimen/margin_normal">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -14,14 +14,17 @@
 
         <ImageView
             android:id="@+id/addImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_margin="@dimen/margin_min"
             android:contentDescription="@string/create_project"
             app:layout_constraintBottom_toTopOf="@id/addTextView"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintWidth_percent="0.3"
             app:srcCompat="@drawable/ic_add" />
 
         <TextView

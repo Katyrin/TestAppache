@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.katyrin.testappache.databinding.ItemNewBinding
 import com.katyrin.testappache.databinding.ItemSavedBinding
-import com.katyrin.testappache.model.ContentData
+import com.katyrin.testappache.model.entities.ContentData
 
 class RecyclerHomeAdapter(
     private var onClick: (ContentData) -> Unit
@@ -15,6 +15,7 @@ class RecyclerHomeAdapter(
 
     fun updateData(newData: List<ContentData>) {
         data = newData
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder =
@@ -51,6 +52,7 @@ class RecyclerHomeAdapter(
     ) : BaseViewHolder(itemBinding.root) {
         override fun bind(dataItem: ContentData) {
             itemBinding.root.setOnClickListener { onClick(dataItem) }
+            itemBinding.nameTextView.text = dataItem.name
         }
     }
 

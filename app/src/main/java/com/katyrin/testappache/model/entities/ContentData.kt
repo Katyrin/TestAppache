@@ -1,4 +1,4 @@
-package com.katyrin.testappache.model
+package com.katyrin.testappache.model.entities
 
 data class ContentData(
     val name: String = ""
