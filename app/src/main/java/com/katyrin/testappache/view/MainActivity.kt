@@ -1,7 +1,8 @@
-package com.katyrin.testappache
+package com.katyrin.testappache.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.katyrin.testappache.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
