@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.DrawingFragment">
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/cancel_repeat_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_normal"
+        app:layout_constraintBottom_toBottomOf="@id/barrier1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/cancel_button"
+            style="@style/Widget.App.Button.OutlinedButton.IconOnlyMin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_undo"
+            tools:ignore="DuplicateSpeakableTextCheck" />
+
+        <Button
+            android:id="@+id/repeat_button"
+            style="@style/Widget.App.Button.OutlinedButton.IconOnlyMin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_redo" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="brush_size_image_layout, instruments_group" />
+
+    <ImageView
+        android:id="@+id/brush_size_image_layout"
+        android:layout_width="72dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/margin_normal"
+        android:contentDescription="@string/brush_size_layout"
+        app:layout_constraintBottom_toBottomOf="@id/instruments_group"
+        app:layout_constraintBottom_toTopOf="@id/barrier2"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@id/instruments_group"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barrier1"
+        app:srcCompat="@drawable/ic_circle_layout" />
+
+    <ImageView
+        android:id="@+id/inner_brush_size_image"
+        android:layout_width="30dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/inner_brush_size"
+        app:layout_constraintBottom_toBottomOf="@id/brush_size_image_layout"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@id/brush_size_image_layout"
+        app:layout_constraintStart_toStartOf="@id/brush_size_image_layout"
+        app:layout_constraintTop_toTopOf="@id/brush_size_image_layout"
+        app:srcCompat="@drawable/ic_inner_circle" />
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/instruments_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_normal"
+        app:layout_constraintBottom_toTopOf="@id/barrier2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/brush_size_image_layout"
+        app:layout_constraintTop_toBottomOf="@id/barrier1"
+        app:singleSelection="true">
+
+        <Button
+            android:id="@+id/brush_button"
+            style="@style/Widget.App.Button.OutlinedButton.IconOnlyMax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_brush" />
+
+        <Button
+            android:id="@+id/eraser_button"
+            style="@style/Widget.App.Button.OutlinedButton.IconOnlyMax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_eraser" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="brush_size_image_layout, instruments_group" />
+
+    <com.katyrin.testappache.view.customview.PaintView
+        android:id="@+id/paintView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barrier2" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/save_button"
+        style="@style/SingleColorMin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/paintView" />
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_normal"
+        android:text="@string/share"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/save_button" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

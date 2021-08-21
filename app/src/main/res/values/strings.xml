@@ -3,4 +3,7 @@
     <string name="create_project">Create project</string>
     <string name="image_saved_project">Image saved project</string>
     <string name="projects">Projects</string>
+    <string name="brush_size_layout">Brush size layout</string>
+    <string name="inner_brush_size">Inner brush size</string>
+    <string name="share">Share</string>
 </resources>

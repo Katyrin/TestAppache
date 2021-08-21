@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import com.katyrin.testappache.R
 import com.katyrin.testappache.databinding.FragmentHomeBinding
 import com.katyrin.testappache.view.adapter.RecyclerHomeAdapter
 import com.katyrin.testappache.viewmodel.AppState
@@ -17,6 +19,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var model: HomeViewModel
     private var binding: FragmentHomeBinding? = null
+    private var navController: NavController? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,9 +31,14 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(requireActivity(), R.id.main_container)
         iniViewModel()
-        binding?.recyclerView?.adapter = RecyclerHomeAdapter {
-            Toast.makeText(requireContext(), it.name, Toast.LENGTH_SHORT).show()
+        binding?.recyclerView?.adapter = RecyclerHomeAdapter { contentData ->
+            navController?.navigate(
+                R.id.action_homeFragment_to_drawingFragment,
+                Bundle().also { it.putParcelable(getString(R.string.app_name), contentData) }
+            )
+            Toast.makeText(requireContext(), contentData.name, Toast.LENGTH_SHORT).show()
         }
         model.getSavedProjects()
     }
@@ -54,6 +62,7 @@ class HomeFragment : Fragment() {
 
     override fun onDestroy() {
         binding = null
+        navController = null
         super.onDestroy()
     }
 }
