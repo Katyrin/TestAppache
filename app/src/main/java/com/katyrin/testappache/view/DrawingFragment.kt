@@ -1,16 +1,17 @@
 package com.katyrin.testappache.view
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.core.view.GestureDetectorCompat
-import androidx.core.view.MotionEventCompat
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.katyrin.testappache.R
 import com.katyrin.testappache.databinding.FragmentDrawingBinding
+import com.katyrin.testappache.model.entities.ArrayStroke
+import com.katyrin.testappache.utils.getColorByThemeAttr
 import com.katyrin.testappache.viewmodel.DrawingViewModel
+
 
 class DrawingFragment : Fragment() {
 
@@ -52,16 +53,43 @@ class DrawingFragment : Fragment() {
             }
             true
         }
-
-
 //        binding?.brushSizeImageLayout?.setOnTouchListener { _, event ->
 //            mDetector.onTouchEvent(event)
 //            true
 //        }
+        savedInstanceState?.apply {
+            binding?.paintView?.setStrokeColor(getInt(BRUSH_COLOR))
+            getParcelable<ArrayStroke>(ARRAY_STROKE)?.let { binding?.paintView?.setStrokes(it) }
+        }
+        initViews()
+    }
+
+    private fun initViews() {
+        binding?.apply {
+            cancelButton.setOnClickListener { paintView.undo() }
+            repeatButton.setOnClickListener { paintView.redo() }
+            brushButton.setOnClickListener {
+                paintView.setStrokeColor(getColorByThemeAttr(R.attr.alwaysBlackColor))
+            }
+            eraserButton.setOnClickListener {
+                paintView.setStrokeColor(getColorByThemeAttr(R.attr.alwaysWhiteColor))
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(ARRAY_STROKE, binding?.paintView?.getStrokes())
+        binding?.paintView?.getStrokeColor()?.let { outState.putInt(BRUSH_COLOR, it) }
     }
 
     override fun onDestroy() {
         binding = null
         super.onDestroy()
+    }
+
+    companion object {
+        private const val ARRAY_STROKE = "ARRAY_STROKE"
+        private const val BRUSH_COLOR = "BRUSH_COLOR"
     }
 }

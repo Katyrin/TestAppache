@@ -2,153 +2,133 @@ package com.katyrin.testappache.view.customview
 
 import android.content.Context
 import android.graphics.*
-import android.provider.MediaStore
 import android.util.AttributeSet
-import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
-import androidx.core.content.ContextCompat
 import com.katyrin.testappache.R
+import com.katyrin.testappache.model.entities.ArrayStroke
+import com.katyrin.testappache.model.entities.ParcelPath
+import com.katyrin.testappache.model.entities.Stroke
+import com.katyrin.testappache.utils.getColorByThemeAttr
 import java.util.*
 import kotlin.math.abs
 
-class PaintView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
 
+class PaintView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
+
+    private var mX = START_POSITION
+    private var mY = START_POSITION
+    private var path: ParcelPath? = null
+    private val paint: Paint = Paint()
+    private val strokes: ArrayList<Stroke> = arrayListOf()
+    private val previousStrokes: ArrayList<Stroke> = arrayListOf()
+    private var strokeWidth = DEFAULT_STROKE_WIDTH
+    private val bitmapPaint = Paint(Paint.DITHER_FLAG)
+    private val bitmapCanvas: Canvas by lazy { Canvas(bitmap) }
+    private var currentColor: Int = context.getColorByThemeAttr(R.attr.alwaysBlackColor)
     private val bitmap: Bitmap by lazy {
         Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
     }
-    private var bitmapCanvas: Canvas? = null
-    private val paintScreen: Paint = Paint()
-    private val paintLine: Paint = Paint()
-    private val pathMap: MutableMap<Int, Path> = HashMap()
-    private val previousPointMap: MutableMap<Int, Point> = HashMap()
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        bitmapCanvas = Canvas(bitmap)
-        bitmap.eraseColor(ContextCompat.getColor(context, R.color.white))
+    fun getStrokes(): ArrayStroke = ArrayStroke(strokes, previousStrokes)
+
+    fun setStrokes(arrayStroke: ArrayStroke) {
+        strokes.addAll(arrayStroke.strokes)
+        previousStrokes.addAll(arrayStroke.previousStrokes)
     }
 
-    fun clear() {
-        pathMap.clear()
-        previousPointMap.clear()
-        bitmap.eraseColor(ContextCompat.getColor(context, R.color.white))
-        invalidate()
+    fun getStrokeColor(): Int = currentColor
+
+    fun setStrokeColor(color: Int) {
+        currentColor = color
     }
 
-    var drawingColor: Int
-        get() = paintLine.color
-        set(color) {
-            paintLine.color = color
-        }
+    fun setStrokeWidth(width: Int) {
+        strokeWidth = width
+    }
 
-    var lineWidth: Int
-        get() = paintLine.strokeWidth.toInt()
-        set(width) {
-            paintLine.strokeWidth = width.toFloat()
+    fun undo() {
+        if (strokes.size != 0) {
+            previousStrokes.add(strokes[strokes.size - ONE_POSITION])
+            strokes.removeAt(strokes.size - ONE_POSITION)
+            invalidate()
         }
+    }
+
+    fun redo() {
+        if (previousStrokes.size != 0) {
+            strokes.add(previousStrokes[previousStrokes.size - ONE_POSITION])
+            previousStrokes.removeAt(previousStrokes.size - ONE_POSITION)
+            invalidate()
+        }
+    }
+
+    fun save(): Bitmap = bitmap
 
     override fun onDraw(canvas: Canvas) {
-        canvas.drawBitmap(bitmap, 0f, 0f, paintScreen)
-        for (key in pathMap.keys) pathMap[key]?.let { canvas.drawPath(it, paintLine) }
+        canvas.save()
+        bitmapCanvas.drawColor(context.getColorByThemeAttr(R.attr.alwaysWhiteColor))
+
+        for (stroke in strokes) {
+            paint.strokeWidth = stroke.strokeWidth.toFloat()
+            paint.color = stroke.color
+            bitmapCanvas.drawPath(stroke.path, paint)
+        }
+        canvas.drawBitmap(bitmap, START_POSITION, START_POSITION, bitmapPaint)
+        canvas.restore()
+    }
+
+    private fun touchStart(x: Float, y: Float) {
+        path = ParcelPath()
+        val fp = Stroke(strokeWidth, path!!, currentColor)
+        strokes.add(fp)
+        path?.reset()
+        path?.moveTo(x, y)
+        mX = x
+        mY = y
+    }
+
+    private fun touchMove(x: Float, y: Float) {
+        val dx = abs(x - mX)
+        val dy = abs(y - mY)
+        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
+            path?.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2)
+            mX = x
+            mY = y
+        }
+    }
+
+    private fun touchUp() {
+        path?.lineTo(mX, mY)
+        previousStrokes.clear()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        val action = event.actionMasked
-        val actionIndex = event.actionIndex
-        if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
-            touchStarted(
-                event.getX(actionIndex), event.getY(actionIndex),
-                event.getPointerId(actionIndex)
-            )
-        } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
-            touchEnded(event.getPointerId(actionIndex))
-        } else {
-            touchMoved(event)
+        val x = event.x
+        val y = event.y
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> touchStart(x, y)
+            MotionEvent.ACTION_MOVE -> touchMove(x, y)
+            MotionEvent.ACTION_UP -> touchUp()
         }
         invalidate()
         return true
     }
 
-    private fun touchStarted(x: Float, y: Float, lineID: Int) {
-        val path: Path?
-        val point: Point?
-        if (pathMap.containsKey(lineID)) {
-            path = pathMap[lineID]
-            path?.reset()
-            point = previousPointMap[lineID]
-        } else {
-            path = Path()
-            pathMap[lineID] = path
-            point = Point()
-            previousPointMap[lineID] = point
-        }
-        path?.moveTo(x, y)
-        point?.x = x.toInt()
-        point?.y = y.toInt()
-    }
-
-    private fun touchMoved(event: MotionEvent) {
-        for (i in 0 until event.pointerCount) {
-            val pointerID = event.getPointerId(i)
-            val pointerIndex = event.findPointerIndex(pointerID)
-            if (pathMap.containsKey(pointerID)) {
-                val newX = event.getX(pointerIndex)
-                val newY = event.getY(pointerIndex)
-                val path = pathMap[pointerID]
-                previousPointMap[pointerID]?.let { point ->
-                    val deltaX = abs(newX - point.x)
-                    val deltaY = abs(newY - point.y)
-                    if (deltaX >= TOUCH_TOLERANCE || deltaY >= TOUCH_TOLERANCE) {
-                        path?.quadTo(
-                            point.x.toFloat(),
-                            point.y.toFloat(),
-                            (newX + point.x) / 2,
-                            (newY + point.y) / 2
-                        )
-                        point.x = newX.toInt()
-                        point.y = newY.toInt()
-                    }
-                }
-            }
-        }
-    }
-
-    private fun touchEnded(lineID: Int) {
-        pathMap[lineID]?.let { path ->
-            bitmapCanvas?.drawPath(path, paintLine)
-            path.reset()
-        }
-    }
-
-    fun saveImage() {
-        val name = "Мой проект" + System.currentTimeMillis() + ".jpg"
-        val location = MediaStore.Images.Media.insertImage(
-            context.contentResolver,
-            bitmap, name, "My Drawing"
-        )
-        if (location != null) {
-            Toast.makeText(context, "R.string.message_saved", Toast.LENGTH_SHORT).apply {
-                setGravity(Gravity.CENTER, xOffset / 2, yOffset / 2)
-                show()
-            }
-        } else {
-            Toast.makeText(context, "R.string.message_error_saving", Toast.LENGTH_SHORT).apply {
-                setGravity(Gravity.CENTER, xOffset / 2, yOffset / 2)
-                show()
-            }
-        }
+    init {
+        paint.color = currentColor
+        paint.isAntiAlias = true
+        paint.isDither = true
+        paint.style = Paint.Style.STROKE
+        paint.strokeJoin = Paint.Join.ROUND
+        paint.strokeCap = Paint.Cap.ROUND
+        paint.alpha = 0xff
     }
 
     companion object {
-        private const val TOUCH_TOLERANCE = 10f
-    }
-
-    init {
-        paintLine.isAntiAlias = true
-        paintLine.color = Color.BLACK
-        paintLine.style = Paint.Style.STROKE
-        paintLine.strokeWidth = 5f
-        paintLine.strokeCap = Paint.Cap.ROUND
+        private const val ONE_POSITION = 1
+        private const val START_POSITION = 0f
+        private const val TOUCH_TOLERANCE = 4f
+        private const val DEFAULT_STROKE_WIDTH = 30
     }
 }

@@ -107,6 +107,7 @@
         android:id="@+id/paintView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:forceDarkAllowed="false"
         app:layout_constraintBottom_toTopOf="@id/save_button"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
