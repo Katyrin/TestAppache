@@ -1,7 +1,9 @@
 package com.katyrin.testappache.view.customview
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -37,14 +39,12 @@ class PaintView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         previousStrokes.addAll(arrayStroke.previousStrokes)
     }
 
-    fun getStrokeColor(): Int = currentColor
-
     fun setStrokeColor(color: Int) {
         currentColor = color
     }
 
-    fun setStrokeWidth(width: Int) {
-        strokeWidth = width
+    fun setBrushSize(size: Float) {
+        strokeWidth = size.toInt()
     }
 
     fun undo() {
@@ -80,8 +80,7 @@ class PaintView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
     private fun touchStart(x: Float, y: Float) {
         path = ParcelPath()
-        val fp = Stroke(strokeWidth, path!!, currentColor)
-        strokes.add(fp)
+        path?.let { parcelPath -> strokes.add(Stroke(strokeWidth, parcelPath, currentColor)) }
         path?.reset()
         path?.moveTo(x, y)
         mX = x
@@ -89,10 +88,8 @@ class PaintView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     }
 
     private fun touchMove(x: Float, y: Float) {
-        val dx = abs(x - mX)
-        val dy = abs(y - mY)
-        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-            path?.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2)
+        if (abs(x - mX) >= TOUCH_TOLERANCE || abs(y - mY) >= TOUCH_TOLERANCE) {
+            path?.quadTo(mX, mY, (x + mX) / HALF_DIVIDER, (y + mY) / HALF_DIVIDER)
             mX = x
             mY = y
         }
@@ -130,5 +127,6 @@ class PaintView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         private const val START_POSITION = 0f
         private const val TOUCH_TOLERANCE = 4f
         private const val DEFAULT_STROKE_WIDTH = 30
+        private const val HALF_DIVIDER = 2
     }
 }

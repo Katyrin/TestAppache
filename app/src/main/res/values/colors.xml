@@ -10,7 +10,8 @@
 
     <color name="main_background_light">#EFF3F6</color>
     <color name="main_background_dark">#100c09</color>
-    <color name="alwaysBlack">#FF000000</color>
-    <color name="alwaysWhite">#FFFFFFFF</color>
-    <color name="iconColor">#768791</color>
+    <color name="always_black">#FF000000</color>
+    <color name="always_white">#FFFFFFFF</color>
+    <color name="icon_color">#768791</color>
+    <color name="circle_color">#e7e7e6</color>
 </resources>

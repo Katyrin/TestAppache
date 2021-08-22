@@ -1,5 +1,6 @@
 package com.katyrin.testappache.di
 
+import com.katyrin.testappache.EventBus
 import com.katyrin.testappache.model.datasource.LocalDataSource
 import com.katyrin.testappache.model.datasource.LocalDataSourceImpl
 import com.katyrin.testappache.model.repository.LocalRepository
@@ -14,4 +15,8 @@ val application = module {
 
 val homeModule = module {
     factory { HomeViewModel(localRepository = get()) }
+}
+
+val eventBus = module {
+    single { EventBus() }
 }

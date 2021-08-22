@@ -39,33 +39,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="top"
-        app:constraint_referenced_ids="brush_size_image_layout, instruments_group" />
+        app:constraint_referenced_ids="brush_size_view, instruments_group" />
 
-    <ImageView
-        android:id="@+id/brush_size_image_layout"
-        android:layout_width="72dp"
+    <com.katyrin.testappache.view.customview.BrushSizeView
+        android:id="@+id/brush_size_view"
+        android:layout_width="70dp"
         android:layout_height="0dp"
         android:layout_margin="@dimen/margin_normal"
-        android:contentDescription="@string/brush_size_layout"
         app:layout_constraintBottom_toBottomOf="@id/instruments_group"
         app:layout_constraintBottom_toTopOf="@id/barrier2"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@id/instruments_group"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/barrier1"
-        app:srcCompat="@drawable/ic_circle_layout" />
-
-    <ImageView
-        android:id="@+id/inner_brush_size_image"
-        android:layout_width="30dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/inner_brush_size"
-        app:layout_constraintBottom_toBottomOf="@id/brush_size_image_layout"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="@id/brush_size_image_layout"
-        app:layout_constraintStart_toStartOf="@id/brush_size_image_layout"
-        app:layout_constraintTop_toTopOf="@id/brush_size_image_layout"
-        app:srcCompat="@drawable/ic_inner_circle" />
+        app:layout_constraintTop_toBottomOf="@id/barrier1" />
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/instruments_group"
@@ -75,7 +61,7 @@
         app:checkedButton="@id/brush_button"
         app:layout_constraintBottom_toTopOf="@id/barrier2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/brush_size_image_layout"
+        app:layout_constraintStart_toEndOf="@id/brush_size_view"
         app:layout_constraintTop_toBottomOf="@id/barrier1"
         app:selectionRequired="true"
         app:singleSelection="true">
@@ -101,10 +87,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="brush_size_image_layout, instruments_group" />
+        app:constraint_referenced_ids="brush_size_view, instruments_group" />
 
     <com.katyrin.testappache.view.customview.PaintView
-        android:id="@+id/paintView"
+        android:id="@+id/paint_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/save_button"
@@ -121,7 +107,7 @@
         app:icon="@drawable/ic_save"
         app:layout_constraintBottom_toTopOf="@id/share_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/paintView" />
+        app:layout_constraintTop_toBottomOf="@+id/paint_view" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/share_button"
