@@ -2,6 +2,7 @@ package com.katyrin.testappache
 
 import android.app.Application
 import com.katyrin.testappache.di.application
+import com.katyrin.testappache.di.drawingModule
 import com.katyrin.testappache.di.eventBus
 import com.katyrin.testappache.di.homeModule
 import org.koin.android.ext.koin.androidContext
@@ -13,7 +14,7 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidContext(applicationContext)
-            modules(listOf(application, homeModule, eventBus))
+            modules(listOf(application, homeModule, eventBus, drawingModule))
         }
     }
 }

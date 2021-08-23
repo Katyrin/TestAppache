@@ -28,6 +28,7 @@ class PaintView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     private val bitmapPaint = Paint(Paint.DITHER_FLAG)
     private val bitmapCanvas: Canvas by lazy { Canvas(bitmap) }
     private var currentColor: Int = context.getColorByThemeAttr(R.attr.alwaysBlackColor)
+    private var background: Bitmap? = null
     private val bitmap: Bitmap by lazy {
         Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
     }
@@ -63,11 +64,11 @@ class PaintView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         }
     }
 
-    fun save(): Bitmap = bitmap
+    fun getBitmapImage(): Bitmap = bitmap
 
     override fun onDraw(canvas: Canvas) {
         canvas.save()
-        bitmapCanvas.drawColor(context.getColorByThemeAttr(R.attr.alwaysWhiteColor))
+        setBackground()
 
         for (stroke in strokes) {
             paint.strokeWidth = stroke.strokeWidth.toFloat()
@@ -76,6 +77,13 @@ class PaintView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         }
         canvas.drawBitmap(bitmap, START_POSITION, START_POSITION, bitmapPaint)
         canvas.restore()
+    }
+
+    private fun setBackground() {
+        if (background == null)
+            bitmapCanvas.drawColor(context.getColorByThemeAttr(R.attr.alwaysWhiteColor))
+        else
+            bitmapCanvas.drawBitmap(background!!, START_POSITION, START_POSITION, bitmapPaint)
     }
 
     private fun touchStart(x: Float, y: Float) {
@@ -110,6 +118,10 @@ class PaintView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         }
         invalidate()
         return true
+    }
+
+    fun init(newBitmap: Bitmap?) {
+        background = newBitmap
     }
 
     init {

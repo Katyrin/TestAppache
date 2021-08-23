@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.katyrin.testappache.databinding.ItemNewBinding
 import com.katyrin.testappache.databinding.ItemSavedBinding
 import com.katyrin.testappache.model.entities.ContentData
+import com.katyrin.testappache.utils.setImageByUri
 
 class RecyclerHomeAdapter(
     private var onClick: (ContentData) -> Unit
@@ -52,7 +53,9 @@ class RecyclerHomeAdapter(
     ) : BaseViewHolder(itemBinding.root) {
         override fun bind(dataItem: ContentData) {
             itemBinding.root.setOnClickListener { onClick(dataItem) }
-            itemBinding.nameTextView.text = dataItem.name
+            val imageName = dataItem.name + dataItem.id
+            itemBinding.nameTextView.text = imageName
+            dataItem.bitmap?.let { itemBinding.addImageView.setImageByUri(it) }
         }
     }
 

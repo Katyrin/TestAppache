@@ -13,11 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/addImageView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="@dimen/margin_min"
             android:contentDescription="@string/image_saved_project"
             app:layout_constraintBottom_toTopOf="@id/nameTextView"
             app:layout_constraintDimensionRatio="1:1"

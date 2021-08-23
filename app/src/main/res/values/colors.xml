@@ -14,4 +14,6 @@
     <color name="always_white">#FFFFFFFF</color>
     <color name="icon_color">#768791</color>
     <color name="circle_color">#e7e7e6</color>
+    <color name="genre_background_color_gray">#DCDCDC</color>
+    <color name="genre_background_color_dark_gray">#242424</color>
 </resources>

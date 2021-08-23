@@ -13,4 +13,8 @@ class LocalRepositoryImpl(
         withContext(Dispatchers.IO) {
             localDataSource.getSavedProjects()
         }
+
+    override suspend fun saveImage(contentData: ContentData) {
+        localDataSource.saveImage(contentData)
+    }
 }

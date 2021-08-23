@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.katyrin.testappache.R
 import com.katyrin.testappache.databinding.FragmentHomeBinding
+import com.katyrin.testappache.utils.toast
 import com.katyrin.testappache.view.adapter.RecyclerHomeAdapter
 import com.katyrin.testappache.viewmodel.AppState
 import com.katyrin.testappache.viewmodel.HomeViewModel
@@ -33,14 +34,17 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(requireActivity(), R.id.main_container)
         iniViewModel()
-        binding?.recyclerView?.adapter = RecyclerHomeAdapter { contentData ->
-            navController?.navigate(
-                R.id.action_homeFragment_to_drawingFragment,
-                Bundle().also { it.putParcelable(getString(R.string.app_name), contentData) }
-            )
-            Toast.makeText(requireContext(), contentData.name, Toast.LENGTH_SHORT).show()
-        }
+        initAdapter()
         model.getSavedProjects()
+    }
+
+    private fun initAdapter() {
+        binding?.recyclerView?.adapter = RecyclerHomeAdapter { contentData ->
+            val direction = HomeFragmentDirections
+                .actionHomeFragmentToDrawingFragment()
+                .setContentData(contentData)
+            navController?.navigate(direction)
+        }
     }
 
     private fun iniViewModel() {
@@ -53,10 +57,8 @@ class HomeFragment : Fragment() {
         when (appState) {
             is AppState.Success ->
                 (binding?.recyclerView?.adapter as RecyclerHomeAdapter).updateData(appState.data)
-            is AppState.Error ->
-                Toast.makeText(requireContext(), appState.message, Toast.LENGTH_SHORT).show()
-            is AppState.Loading ->
-                Toast.makeText(requireContext(), "Loading", Toast.LENGTH_SHORT).show()
+            is AppState.Error -> toast(appState.message)
+            is AppState.Loading -> toast("Loading")
         }
     }
 
