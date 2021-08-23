@@ -1,11 +1,13 @@
 package com.katyrin.testappache.di
 
 import androidx.room.Room
-import com.katyrin.testappache.EventBus
+import com.katyrin.testappache.bus.EventBus
 import com.katyrin.testappache.model.datasource.LocalDataSource
 import com.katyrin.testappache.model.datasource.LocalDataSourceImpl
 import com.katyrin.testappache.model.interactor.DrawingInteractor
 import com.katyrin.testappache.model.interactor.DrawingInteractorImpl
+import com.katyrin.testappache.model.interactor.HomeInteractor
+import com.katyrin.testappache.model.interactor.HomeInteractorImpl
 import com.katyrin.testappache.model.repository.LocalRepository
 import com.katyrin.testappache.model.repository.LocalRepositoryImpl
 import com.katyrin.testappache.model.storage.ContentDataBase
@@ -19,10 +21,12 @@ val application = module {
     single<LocalDataSource> { LocalDataSourceImpl(get()) }
     single<LocalRepository> { LocalRepositoryImpl(localDataSource = get()) }
     single<DrawingInteractor> { DrawingInteractorImpl(localRepository = get()) }
+    single<HomeInteractor> { HomeInteractorImpl(localRepository = get()) }
 }
 
+
 val homeModule = module {
-    factory { HomeViewModel(localRepository = get()) }
+    factory { HomeViewModel(homeInteractor = get()) }
 }
 
 val drawingModule = module {

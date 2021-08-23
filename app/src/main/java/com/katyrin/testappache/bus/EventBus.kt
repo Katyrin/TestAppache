@@ -1,4 +1,4 @@
-package com.katyrin.testappache
+package com.katyrin.testappache.bus
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

@@ -9,10 +9,7 @@ class LocalRepositoryImpl(
     private val localDataSource: LocalDataSource
 ) : LocalRepository {
 
-    override suspend fun getSavedProjects(): List<ContentData> =
-        withContext(Dispatchers.IO) {
-            localDataSource.getSavedProjects()
-        }
+    override suspend fun getSavedProjects(): List<ContentData> = localDataSource.getSavedProjects()
 
     override suspend fun saveImage(contentData: ContentData) {
         localDataSource.saveImage(contentData)

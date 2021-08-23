@@ -8,8 +8,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import androidx.core.content.ContextCompat
-import com.katyrin.testappache.AppEvent
-import com.katyrin.testappache.EventBus
+import com.katyrin.testappache.bus.AppEvent
+import com.katyrin.testappache.bus.EventBus
 import com.katyrin.testappache.R
 import kotlinx.coroutines.*
 import org.koin.core.component.KoinApiExtension

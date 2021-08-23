@@ -27,9 +27,19 @@ class DrawingViewModel(
     fun subscribe(): LiveData<DrawingState> = liveData
 
     fun saveImage(contentData: ContentData) {
+        cancelJob()
         viewModelCoroutineScope.launch {
             drawingInteractor.saveImage(contentData)
             _mutableLiveData.postValue(DrawingState.Success)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        cancelJob()
+    }
+
+    private fun cancelJob() {
+        viewModelCoroutineScope.coroutineContext.cancelChildren()
     }
 }

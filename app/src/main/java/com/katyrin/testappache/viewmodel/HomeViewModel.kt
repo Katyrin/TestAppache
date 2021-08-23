@@ -3,11 +3,12 @@ package com.katyrin.testappache.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.katyrin.testappache.model.interactor.HomeInteractor
 import com.katyrin.testappache.model.repository.LocalRepository
 import kotlinx.coroutines.*
 
 class HomeViewModel(
-    private val localRepository: LocalRepository
+    private val homeInteractor: HomeInteractor
 ) : ViewModel() {
 
     private val _mutableLiveData: MutableLiveData<AppState> = MutableLiveData()
@@ -29,7 +30,7 @@ class HomeViewModel(
         _mutableLiveData.value = AppState.Loading
         cancelJob()
         viewModelCoroutineScope.launch {
-            _mutableLiveData.postValue(AppState.Success(localRepository.getSavedProjects()))
+            _mutableLiveData.postValue(AppState.Success(homeInteractor.getSavedProjects()))
         }
     }
 
