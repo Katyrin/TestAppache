@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.katyrin.testappache.R
 import com.katyrin.testappache.bus.AppEvent
 import com.katyrin.testappache.bus.EventBus
-import com.katyrin.testappache.R
 import com.katyrin.testappache.databinding.FragmentDrawingBinding
 import com.katyrin.testappache.model.entities.ArrayStroke
 import com.katyrin.testappache.model.entities.ContentData

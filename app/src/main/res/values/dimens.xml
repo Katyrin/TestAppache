@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
+    <dimen name="stroke_size">1dp</dimen>
     <dimen name="margin_min">4dp</dimen>
     <dimen name="margin_normal">8dp</dimen>
+    <dimen name="margin_max">16dp</dimen>
+    <dimen name="padding_group_button">12dp</dimen>
+    <dimen name="icon_size">36dp</dimen>
+    <dimen name="min_square_button_size">48dp</dimen>
+    <dimen name="max_square_button_size">52dp</dimen>
+
+    <dimen name="brush_view_size" tools:ignore="PxUsage">100px</dimen>
+
+    <dimen name="header_text_size">20sp</dimen>
 
 </resources>

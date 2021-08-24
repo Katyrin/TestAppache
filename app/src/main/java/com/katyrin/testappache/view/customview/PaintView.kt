@@ -108,6 +108,12 @@ class PaintView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         previousStrokes.clear()
     }
 
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (parent != null && event.action == MotionEvent.ACTION_DOWN)
+            parent.requestDisallowInterceptTouchEvent(true)
+        return super.dispatchTouchEvent(event)
+    }
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = event.x
         val y = event.y

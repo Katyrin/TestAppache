@@ -1,5 +1,6 @@
 package com.katyrin.testappache.view.customview
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -46,10 +47,6 @@ class BrushSizeView(context: Context, attrs: AttributeSet?) : View(context, attr
         requestLayout()
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, widthMeasureSpec)
-    }
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.drawCircle(center, center, CIRCLE_RADIUS, paintCircle())
@@ -76,6 +73,13 @@ class BrushSizeView(context: Context, attrs: AttributeSet?) : View(context, attr
         alpha = 0xff
     }
 
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (parent != null && event.action == MotionEvent.ACTION_DOWN)
+            parent.requestDisallowInterceptTouchEvent(true)
+        return super.dispatchTouchEvent(event)
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> touchStart(event.y)
@@ -137,6 +141,6 @@ class BrushSizeView(context: Context, attrs: AttributeSet?) : View(context, attr
         private const val MIN_BRUSH_SIZE = 1.5f
         private const val START_POSITION = 0f
         private const val TOUCH_TOLERANCE = 2f
-        private const val DIVIDER = -   50f
+        private const val DIVIDER = -50f
     }
 }
