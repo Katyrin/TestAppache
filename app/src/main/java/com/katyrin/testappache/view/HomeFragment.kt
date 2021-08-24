@@ -54,7 +54,7 @@ class HomeFragment : Fragment() {
     private fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Success ->
-                (binding?.recyclerView?.adapter as RecyclerHomeAdapter).updateData(appState.data)
+                (binding?.recyclerView?.adapter as RecyclerHomeAdapter).submitList(appState.data)
             is AppState.Error -> toast(appState.message)
             is AppState.Loading -> toast(getString(R.string.loading))
         }

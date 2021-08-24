@@ -2,7 +2,7 @@ package com.katyrin.testappache.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.katyrin.testappache.databinding.ItemNewBinding
 import com.katyrin.testappache.databinding.ItemSavedBinding
 import com.katyrin.testappache.model.entities.ContentData
@@ -10,14 +10,7 @@ import com.katyrin.testappache.utils.setImageByUri
 
 class RecyclerHomeAdapter(
     private var onClick: (ContentData) -> Unit
-) : RecyclerView.Adapter<BaseViewHolder>() {
-
-    private var data: List<ContentData> = listOf()
-
-    fun updateData(newData: List<ContentData>) {
-        data = newData
-        notifyDataSetChanged()
-    }
+) : ListAdapter<ContentData, BaseViewHolder>(ContentDiffing) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder =
         with(LayoutInflater.from(parent.context)) {
@@ -27,12 +20,9 @@ class RecyclerHomeAdapter(
             }
         }
 
-
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        holder.bind(data[position])
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount(): Int = data.size
 
     override fun getItemViewType(position: Int): Int =
         when (position) {

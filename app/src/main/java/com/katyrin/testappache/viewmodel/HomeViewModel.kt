@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.katyrin.testappache.model.interactor.HomeInteractor
-import com.katyrin.testappache.model.repository.LocalRepository
 import kotlinx.coroutines.*
 
 class HomeViewModel(
@@ -39,7 +38,5 @@ class HomeViewModel(
         cancelJob()
     }
 
-    private fun cancelJob() {
-        viewModelCoroutineScope.coroutineContext.cancelChildren()
-    }
+    private fun cancelJob(): Unit = viewModelCoroutineScope.coroutineContext.cancelChildren()
 }
