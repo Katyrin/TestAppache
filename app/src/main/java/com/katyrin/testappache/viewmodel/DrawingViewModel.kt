@@ -42,12 +42,19 @@ class DrawingViewModel(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
+    fun getUri(contentData: ContentData) {
         cancelJob()
+        viewModelCoroutineScope.launch {
+            val contentUri = drawingInteractor.getUri(contentData)
+            _mutableLiveData.value = DrawingState.SuccessShare(contentUri)
+            getProjectById(contentData.id)
+        }
     }
 
-    private fun cancelJob() {
-        viewModelCoroutineScope.coroutineContext.cancelChildren()
+    override fun onCleared() {
+        cancelJob()
+        super.onCleared()
     }
+
+    private fun cancelJob(): Unit = viewModelCoroutineScope.coroutineContext.cancelChildren()
 }

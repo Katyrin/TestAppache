@@ -1,5 +1,7 @@
 package com.katyrin.testappache.view
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -75,7 +77,9 @@ class DrawingFragment : Fragment() {
     private fun iniViewModel() {
         val viewModel: DrawingViewModel by viewModel()
         model = viewModel
-        model.subscribe().observe(viewLifecycleOwner) { renderData(it) }
+        model.subscribe().observe(viewLifecycleOwner) {
+            renderData(it)
+        }
         contentId?.let { model.getProjectById(it) }
     }
 
@@ -84,7 +88,16 @@ class DrawingFragment : Fragment() {
             is DrawingState.SuccessSave -> requireActivity().onBackPressed()
             is DrawingState.Error -> toast(drawingState.message)
             is DrawingState.Success -> initPaintView(drawingState.contentData)
+            is DrawingState.SuccessShare -> shareImageUri(drawingState.contentUri)
         }
+    }
+
+    private fun shareImageUri(uri: Uri) {
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.putExtra(Intent.EXTRA_STREAM, uri)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        intent.type = IMAGE_PNG
+        startActivity(intent)
     }
 
     private fun initPaintView(contentData: ContentData) {
@@ -98,7 +111,8 @@ class DrawingFragment : Fragment() {
             repeatButton.setOnClickListener { paintView.redo() }
             brushButton.setOnClickListener { selectBrush() }
             eraserButton.setOnClickListener { selectEraser() }
-            saveButton.setOnClickListener { saveImage() }
+            saveButton.setOnClickListener { model.saveImage(getCurrentContentData()) }
+            shareButton.setOnClickListener { model.getUri(getCurrentContentData()) }
         }
     }
 
@@ -114,8 +128,8 @@ class DrawingFragment : Fragment() {
             binding?.brushSizeView?.setColor(color)
         }
 
-    private fun saveImage(): Unit =
-        model.saveImage(ContentData(binding?.paintView?.getBitmapImage(), name!!, contentId!!))
+    private fun getCurrentContentData(): ContentData =
+        ContentData(binding?.paintView?.getBitmapImage(), name!!, contentId!!)
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -137,5 +151,6 @@ class DrawingFragment : Fragment() {
         private const val ARRAY_STROKE = "ARRAY_STROKE"
         private const val BRUSH_COLOR_BUNDLE = "BRUSH_COLOR_BUNDLE"
         private const val BRUSH_SIZE = "BRUSH_COLOR"
+        private const val IMAGE_PNG = "image/png"
     }
 }

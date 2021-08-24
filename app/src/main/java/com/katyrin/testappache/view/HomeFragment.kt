@@ -40,8 +40,7 @@ class HomeFragment : Fragment() {
     private fun initAdapter() {
         binding?.recyclerView?.adapter = RecyclerHomeAdapter { contentData ->
             val direction = HomeFragmentDirections
-                .actionHomeFragmentToDrawingFragment()
-                .setContentId(contentData.id)
+                .actionHomeFragmentToDrawingFragment(contentData.id)
             navController?.navigate(direction)
         }
     }
