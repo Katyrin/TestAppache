@@ -1,9 +1,7 @@
 package com.katyrin.testappache.model.repository
 
-import com.katyrin.testappache.model.entities.ContentData
 import com.katyrin.testappache.model.datasource.LocalDataSource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.katyrin.testappache.model.entities.ContentData
 
 class LocalRepositoryImpl(
     private val localDataSource: LocalDataSource
@@ -14,4 +12,6 @@ class LocalRepositoryImpl(
     override suspend fun saveImage(contentData: ContentData) {
         localDataSource.saveImage(contentData)
     }
+
+    override suspend fun getProjectById(id: Int): ContentData = localDataSource.getProjectById(id)
 }

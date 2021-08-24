@@ -30,7 +30,15 @@ class DrawingViewModel(
         cancelJob()
         viewModelCoroutineScope.launch {
             drawingInteractor.saveImage(contentData)
-            _mutableLiveData.postValue(DrawingState.Success)
+            _mutableLiveData.postValue(DrawingState.SuccessSave)
+        }
+    }
+
+    fun getProjectById(id: Int) {
+        cancelJob()
+        viewModelCoroutineScope.launch {
+            val contentData = drawingInteractor.getProjectById(id)
+            _mutableLiveData.postValue(DrawingState.Success(contentData))
         }
     }
 

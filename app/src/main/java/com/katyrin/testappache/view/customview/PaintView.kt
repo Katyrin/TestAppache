@@ -1,5 +1,6 @@
 package com.katyrin.testappache.view.customview
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -114,6 +115,7 @@ class PaintView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         return super.dispatchTouchEvent(event)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = event.x
         val y = event.y
@@ -128,6 +130,7 @@ class PaintView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
     fun init(newBitmap: Bitmap?) {
         background = newBitmap
+        invalidate()
     }
 
     init {

@@ -21,11 +21,10 @@
         android:id="@+id/drawingFragment"
         android:name="com.katyrin.testappache.view.DrawingFragment"
         android:label="fragment_drawing"
-        tools:layout="@layout/fragment_drawing" >
+        tools:layout="@layout/fragment_drawing">
         <argument
-            android:name="contentData"
-            app:nullable="true"
-            android:defaultValue="@null"
-            app:argType="com.katyrin.testappache.model.entities.ContentData" />
+            android:name="contentId"
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
 </navigation>

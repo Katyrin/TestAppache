@@ -32,7 +32,8 @@ class DrawingFragment : Fragment() {
     private val eventBus: EventBus by inject()
     private lateinit var model: DrawingViewModel
     private var binding: FragmentDrawingBinding? = null
-    private var contentData: ContentData? = null
+    private var contentId: Int? = null
+    private var name: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +45,7 @@ class DrawingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        contentData = DrawingFragmentArgs.fromBundle(requireArguments()).contentData
+        contentId = DrawingFragmentArgs.fromBundle(requireArguments()).contentId
         scope.launch { eventBus.events.collectLatest { handleAppEvent(it) } }
         restoreState(savedInstanceState)
         iniViewModel()
@@ -75,18 +76,24 @@ class DrawingFragment : Fragment() {
         val viewModel: DrawingViewModel by viewModel()
         model = viewModel
         model.subscribe().observe(viewLifecycleOwner) { renderData(it) }
+        contentId?.let { model.getProjectById(it) }
     }
 
     private fun renderData(drawingState: DrawingState) {
         when (drawingState) {
-            is DrawingState.Success -> requireActivity().onBackPressed()
+            is DrawingState.SuccessSave -> requireActivity().onBackPressed()
             is DrawingState.Error -> toast(drawingState.message)
+            is DrawingState.Success -> initPaintView(drawingState.contentData)
         }
+    }
+
+    private fun initPaintView(contentData: ContentData) {
+        binding?.paintView?.init(contentData.bitmap)
+        name = contentData.name
     }
 
     private fun initViews() {
         binding?.apply {
-            paintView.init(contentData?.bitmap)
             cancelButton.setOnClickListener { paintView.undo() }
             repeatButton.setOnClickListener { paintView.redo() }
             brushButton.setOnClickListener { selectBrush() }
@@ -107,12 +114,8 @@ class DrawingFragment : Fragment() {
             binding?.brushSizeView?.setColor(color)
         }
 
-    private fun saveImage() {
-        contentData?.apply {
-            model.saveImage(ContentData(binding?.paintView?.getBitmapImage(), name, id))
-        }
-    }
-
+    private fun saveImage(): Unit =
+        model.saveImage(ContentData(binding?.paintView?.getBitmapImage(), name!!, contentId!!))
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -125,7 +128,8 @@ class DrawingFragment : Fragment() {
 
     override fun onDestroy() {
         binding = null
-        contentData = null
+        contentId = null
+        name = null
         super.onDestroy()
     }
 

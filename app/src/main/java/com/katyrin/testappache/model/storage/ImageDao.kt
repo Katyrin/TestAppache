@@ -14,4 +14,7 @@ interface ImageDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveImage(contentEntity: ContentEntity)
+
+    @Query("SELECT * FROM content WHERE id LIKE :id")
+    suspend fun getProjectById(id: Int): ContentEntity
 }

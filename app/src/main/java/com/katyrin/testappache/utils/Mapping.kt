@@ -8,11 +8,9 @@ fun mapDataToEntity(contentData: ContentData): ContentEntity =
 
 fun mapListEntityToListData(entities: List<ContentEntity>): List<ContentData> {
     val listData: MutableList<ContentData> = mutableListOf()
-    for (entity in entities) {
-        listData.add(ContentData(entity.bitmap, entity.name, entity.id))
-    }
+    for (entity in entities) listData.add(mapEntityToData(entity))
     return listData
 }
 
-
-
+fun mapEntityToData(entity: ContentEntity): ContentData =
+    ContentData(entity.bitmap, entity.name, entity.id)

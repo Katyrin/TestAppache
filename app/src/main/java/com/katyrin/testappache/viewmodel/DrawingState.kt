@@ -1,6 +1,9 @@
 package com.katyrin.testappache.viewmodel
 
+import com.katyrin.testappache.model.entities.ContentData
+
 sealed class DrawingState {
-    object Success : DrawingState()
+    object SuccessSave : DrawingState()
+    data class Success(val contentData: ContentData) : DrawingState()
     data class Error(val message: String?) : DrawingState()
 }
